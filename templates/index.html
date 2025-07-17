@@ -1,0 +1,48 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Memory Chatbot</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    #chat { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: scroll; }
+    .msg { margin-bottom: 1em; }
+    .user { text-align: right; }
+  </style>
+</head>
+<body>
+  <h1>Memory Chatbot Demo</h1>
+  <div id="chat"></div>
+  <input id="input" type="text" style="width:80%;" placeholder="Say something..." />
+  <button id="send">Send</button>
+
+  <script>
+    const chatDiv = document.getElementById("chat");
+    const inputEl = document.getElementById("input");
+    const sendBtn = document.getElementById("send");
+
+    function append(role, text) {
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      div.textContent = text;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    sendBtn.onclick = async () => {
+      const message = inputEl.value.trim();
+      if (!message) return;
+      append("user", "You: " + message);
+      inputEl.value = "";
+      const resp = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = await resp.json();
+      append("bot", "Bot: " + (data.reply || data.error));
+    };
+  </script>
+</body>
+</html>

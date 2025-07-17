@@ -1,0 +1,9 @@
+flask
+python-dotenv
+openai
+azure-search-documents
+azure-identity
+tiktoken
+langchain==0.3.*
+langchain-openai
+langgraph
