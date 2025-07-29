@@ -5,14 +5,14 @@ from typing import TypedDict, List, Dict, Optional
 from dotenv import load_dotenv
 
 from langgraph.graph import StateGraph, START, END
-from langgraph.checkpoint.memory import MemorySaver
-from langchain_chat_compat import ChatOpenAI
+from langgraph.checkpoint.memory import InMemorySaver
+from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 
 import memory_manager
 from web_search import should_search_web, search_and_scrape
 from context_manager import ContextManagerLLM, QueryAnalysis
-# from azure_search_retriever_simple import SimpleAzureSearchRetriever  # Not currently used
+from azure_search_retriever import AzureSearchRetriever
 
 # ─── Load environment variables ────────────────────────────────
 load_dotenv()
@@ -34,18 +34,16 @@ class ChatState(TypedDict):
     session_id: str                    # Session ID for persistence
     dynamic_prompt: str                # Context-aware prompt
 
-# ─── 2) Note: Azure Search retriever is defined but not currently used ────
-# The memory_manager handles all retrieval internally
-# If you need to use the retriever directly, uncomment below:
-# retriever = SimpleAzureSearchRetriever(
-#     endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
-#     api_key=os.getenv("AZURE_SEARCH_API_KEY"),
-#     index_name=os.getenv("AZURE_INDEX_NAME"),
-#     k=8
-# )
+# ─── 2) Instantiate your Azure Search retriever ────────────────
+retriever = AzureSearchRetriever(
+    endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
+    api_key=os.getenv("AZURE_SEARCH_API_KEY"),
+    index_name=os.getenv("AZURE_INDEX_NAME"),
+    k=8
+)
 
 # ─── 3) Choose a checkpointer for persistence ───────────────────
-checkpointer = MemorySaver()
+checkpointer = InMemorySaver()
 
 # ─── 4) Build the LangGraph with context-aware workflow ─────────
 builder = StateGraph(ChatState)

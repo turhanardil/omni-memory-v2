@@ -1,9 +1,29 @@
-flask
-python-dotenv
-openai
-azure-search-documents
-azure-identity
-tiktoken
-langchain==0.3.*
-langchain-openai
-langgraph
+# Core dependencies
+flask==3.0.3
+python-dotenv==1.0.1
+requests==2.32.3
+beautifulsoup4==4.12.3
+urllib3==2.2.2
+pytz==2024.1
+lxml==5.2.2
+
+# OpenAI and LangChain - Fixed versions for compatibility
+openai==1.40.0
+langchain==0.2.16  # Downgraded to match langgraph
+langchain-openai==0.1.25  # Compatible version
+langchain-community==0.2.16  # Compatible version
+langgraph==0.2.16
+
+# Azure dependencies
+azure-search-documents==11.4.0
+azure-identity==1.16.1
+azure-core==1.30.2
+
+# Other dependencies
+tiktoken==0.7.0
+pydantic==2.8.2
+httpx==0.27.0
+httpcore==1.0.5
+numpy==1.26.4
+tenacity==8.5.0  # Added for retry logic
+dataclasses-json==0.6.3

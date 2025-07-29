@@ -7,7 +7,7 @@ from azure.search.documents.models import VectorizedQuery
 from dotenv import load_dotenv
 
 from openai import OpenAI
-from langchain_chat_compat import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 
 load_dotenv()
